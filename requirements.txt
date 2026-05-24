@@ -1,0 +1,11 @@
+# Core geospatial / analysis stack for the UK onshore-wind assessment
+geopandas
+rasterio
+shapely
+numpy
+pandas
+scipy
+matplotlib
+opencv-python      # cv2 — kernel generation & convolution in the site search
+numpy-financial    # npf.npv / npf.irr in the financial analysis
+jupyterlab
