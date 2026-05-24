@@ -24,10 +24,10 @@ This project answers three questions:
 
 | | |
 |---|---|
-| 🎯 **20 sites identified**, 0.5 GW each → **10 GW** total | 📍 **17 Scotland · 2 Wales · 1 Northern Ireland · 0 England** |
-| 🧮 AHP weighting with **Consistency Ratio = 0.003** (≪ 0.10) | 🌬️ Wind speed & grid congestion are the dominant criteria (28.7% each) |
-| 💰 Portfolio **IRR ≈ 12.0–12.8%**, well above the **5.8% hurdle rate** | ⚡ **LCOE ≈ £44–46/MWh** — viable without substantial subsidy |
-| 🗺️ 66.7 m master grid, British National Grid (EPSG:27700) | 🌀 81 turbines per **125 km²** footprint, wake-spacing enforced |
+| **20 sites identified**, 0.5 GW each → **10 GW** total | **17 Scotland · 2 Wales · 1 Northern Ireland · 0 England** |
+| AHP weighting with **Consistency Ratio = 0.003** (≪ 0.10) | Wind speed & grid congestion are the dominant criteria (28.7% each) |
+| Portfolio **IRR ≈ 12.0–12.8%**, well above the **5.8% hurdle rate** | **LCOE ≈ £44–46/MWh** — viable without substantial subsidy |
+| 66.7 m master grid, British National Grid (EPSG:27700) | 81 turbines per **125 km²** footprint, wake-spacing enforced |
 
 **Headline finding:** suitable large-scale (0.5 GW) sites are overwhelmingly concentrated in Scotland. No qualifying site exists in England under the spatial constraints, which makes the 10 GW programme critically dependent on long-distance transmission and grid reinforcement to reach demand centres in the south.
 
@@ -136,6 +136,6 @@ UK Land Cover Map (UKCEH) · Global Wind Atlas (wind speed) · SRTM (terrain slo
 - The 0.5 GW footprint requirement is deliberately strict; smaller modular clusters (100–250 MW) would unlock more balanced siting across England and NI.
 - Capacity factors and cost assumptions are point estimates from published industry data (see the sensitivity analysis for the response surface).
 
-## Context
+## Notes
 
-Academic coursework — module **BENV0093, Spatial Analysis of Energy Data** (UCL). The full written report accompanies this code repository.
+Spatial analysis of energy data. A full written report accompanies this code repository.
