@@ -1,6 +1,6 @@
 # Input data
 
-The raw geodata is large and redistributed under the licences of its providers, so it is **not** included in this repository. Download the datasets below and place them under `./Data/` following the layout the notebooks expect. Intermediate outputs (e.g. the suitability GeoTIFF) are written to `./Sripts/Output/`.
+The raw geodata is large and subject to the licences of its providers, so it is **not** included in this repository. Download the datasets below and place them under `./Data/` following the layout the notebooks expect. Intermediate outputs (e.g. the suitability GeoTIFF) are written to `./outputs/`.
 
 All layers are reprojected to the **British National Grid (EPSG:27700)** inside the notebooks.
 
@@ -30,7 +30,12 @@ Data/
 ├── Current Wind Mills/         # Current Wind mills.csv
 └── Current PV/                 # *.geojson per region
 
-Sripts/Output/                  # written by the notebooks (e.g. UK_Final_Suitability_Score.tif)
+outputs/                        # written by notebook 01 (e.g. UK_Final_Suitability_Score.tif)
 ```
+
+Notebooks 01 and 02 also read the following files from `outputs/`, which the notebooks do not create and which are not included here:
+
+- `UK_Landmass_Outline_100m.tif`: UK land-mass outline used for the map background (notebook 01)
+- `scotland_spatial_assessment.tif`, `england_spatial_assessment.tif`, `wales_spatial_assessment.tif`, `northern_ireland_spatial_assessment.tif`: per-nation masks used for the regional quotas (notebook 02)
 
 > The exact buffer distances, allowed land-use classes and regional congestion scores are defined at the top of `01_suitability_map.ipynb` and can be adjusted there.

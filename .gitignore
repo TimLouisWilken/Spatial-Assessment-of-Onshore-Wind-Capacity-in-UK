@@ -1,6 +1,6 @@
 # Data & generated outputs (not redistributed — see DATA.md)
 Data/
-Sripts/Output/
+outputs/
 *.tif
 *.tiff
 

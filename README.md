@@ -12,21 +12,21 @@
 
 ## Overview
 
-The UK is legally committed to Net Zero by 2050 and a fully decarbonised power sector by 2035. Onshore wind is among the cheapest, fastest-to-deploy technologies — but land scarcity forces a trade-off between energy yield, environmental protection, and social acceptance.
+The UK has a legally binding Net Zero target for 2050 and a government goal of a clean power system by 2030. Onshore wind is among the cheapest and fastest technologies to deploy, but limited land forces a trade-off between energy yield, environmental protection and social acceptance.
 
 This project answers three questions:
 
 1. **Spatial distribution** — what are the current geographic patterns and scales of UK onshore wind?
 2. **Strategic site selection** — where are the 20 most suitable locations for 0.5 GW wind farms, based on a multi-criteria spatial assessment?
-3. **Economic viability** — is the 10 GW expansion financially robust, and does it need subsidies?
+3. **Economic viability** — is the 10 GW expansion financially viable, and does it need subsidies?
 
 ## Key results
 
 | | |
 |---|---|
 | **20 sites identified**, 0.5 GW each → **10 GW** total | **17 Scotland · 2 Wales · 1 Northern Ireland · 0 England** |
-| AHP weighting with **Consistency Ratio = 0.003** (≪ 0.10) | Wind speed & grid congestion are the dominant criteria (28.7% each) |
-| Portfolio **IRR ≈ 12.0–12.8%**, well above the **5.8% hurdle rate** | **LCOE ≈ £44–46/MWh** — viable without substantial subsidy |
+| AHP weighting with **Consistency Ratio = 0.003** (≪ 0.10) | Wind speed and grid congestion carry the largest weights (28.7% each); see the note on C7 below |
+| Portfolio **IRR ≈ 11.9–12.8%**, well above the **5.8% hurdle rate** | **LCOE ≈ £44–46/MWh** — viable without substantial subsidy |
 | 66.7 m master grid, British National Grid (EPSG:27700) | 81 turbines per **125 km²** footprint, wake-spacing enforced |
 
 **Headline finding:** suitable large-scale (0.5 GW) sites are overwhelmingly concentrated in Scotland. No qualifying site exists in England under the spatial constraints, which makes the 10 GW programme critically dependent on long-distance transmission and grid reinforcement to reach demand centres in the south.
@@ -51,7 +51,9 @@ All heterogeneous inputs (vector shapes, XML aviation data, GeoTIFF rasters) are
 | C5 | Slope | 0.081 |
 | C6 | Protected-area distance | 0.081 |
 
-The weights derive from a 7×7 pairwise comparison matrix (Saaty 1–9 scale) with **CR = 0.003**, confirming logically consistent judgements.
+The weights derive from a 7×7 pairwise comparison matrix (Saaty 1–9 scale) with CR = 0.003. The matrix and the CR calculation are not part of the notebooks, which use the resulting weights directly.
+
+**Note on C7 (grid congestion).** In the current notebook the regional congestion scores are rasterised onto the geometries of existing PV installations rather than onto regional boundaries. Those areas are excluded by the 600 m buffer, so on almost all eligible pixels C7 keeps its default value of 1. In effect C7 is constant across eligible pixels and does not change the site ranking; the ranking is driven by C1–C6. Fixing this requires re-running notebooks 01–03 with proper regional boundaries.
 
 $$S = 0.287\,x_{\text{Wind}} + 0.287\,x_{\text{Congest}} + 0.088\,(x_{\text{Grid}} + x_{\text{Road}} + x_{\text{Urban}}) + 0.081\,(x_{\text{Slope}} + x_{\text{Prot}})$$
 
@@ -62,7 +64,7 @@ $$S = 0.287\,x_{\text{Wind}} + 0.287\,x_{\text{Congest}} + 0.088\,(x_{\text{Grid
 
 A custom geometry-based algorithm turns the continuous suitability surface into 20 discrete sites:
 
-- **Geometric kernels** — a library of footprints (square, circle, and 3:1 / 5:1 ellipses rotated in 22.5° steps), each with a gross area of **125 km²** (power density 4 km²/MW).
+- **Geometric kernels** — a library of footprints (square, circle, and 3:1 / 5:1 ellipses rotated in 22.5° steps), each with a gross area of **125 km²** (power density 4 MW/km²).
 - **Convolutional scanning** — each kernel is convolved over the suitability raster to find regions of high cumulative potential.
 - **Turbine placement** — for each candidate centroid, 81 turbines are greedily placed on the highest-suitability pixels subject to a minimum wake-spacing distance.
 - **Global ranking & quotas** — sites are ranked by mean suitability and allocated under regional quotas (Scotland/England/Wales/NI), with a **fallback** that re-allocates any unmet quota to the highest-ranking Scottish candidates so the national target of 20 sites is always met.
@@ -72,16 +74,16 @@ A custom geometry-based algorithm turns the continuous suitability surface into 
 
 ### 3 · Financial viability — [`03_financial_analysis.ipynb`](03_financial_analysis.ipynb)
 
-A full discounted cash-flow model computes **NPV, IRR and LCOE** for each site (35-year lifetime, 5.8% discount rate), with site-specific grid-connection cost scaling with distance to the high-voltage network. A **sensitivity analysis** sweeps electricity price (£50–90/MWh) against CapEx (90–120%).
+A discounted cash-flow model computes **NPV, IRR and LCOE** for each site (35-year lifetime, 5.8% discount rate), with grid-connection cost scaling with distance to the high-voltage network. A **sensitivity analysis** sweeps electricity price (£50–90/MWh) against CapEx (90–120%) for a representative site (2.5 km grid distance, grid cost £1.0 M/km).
 
 | Parameter | Value | Parameter | Value |
 |---|---|---|---|
 | Capacity / farm | 500 MW | Electricity price | £73.8/MWh (CfD AR6) |
 | Lifetime | 35 yr | CapEx | £1.588 M/MW |
-| Capacity factor | 33% (Eng) / 38.1% (Sco, Wal, NI) | OpEx | £40.1 k/MW·yr |
-| Discount rate | 5.8% | Grid connection | £2.03 M/MW·km |
+| Capacity factor | 38.1% (all selected sites; 33% would apply in England) | OpEx | £40.1 k/MW·yr |
+| Discount rate | 5.8% | Grid connection | £2.03 M/km |
 
-**Result:** every site clears the hurdle rate (IRR 11.9–12.8%, LCOE £44–46/MWh). The only loss-making scenario is the pessimistic combination of a £50/MWh price *and* a 20% CapEx overrun — the portfolio is otherwise resilient.
+**Result:** every site clears the hurdle rate (IRR 11.9–12.8%, LCOE £44–46/MWh). The only scenario with negative NPV is the combination of a £50/MWh price and a 20% CapEx overrun.
 
 ---
 
@@ -124,7 +126,7 @@ pip install -r requirements.txt
 jupyter lab
 ```
 
-The notebooks expect the raw geodata under `./Data/...` and write intermediate rasters to `./Sripts/Output/...` (paths are relative to the repo root). The datasets are large and licensed by their providers, so they are **not** redistributed here — see [`DATA.md`](DATA.md) for sources and the expected folder layout. Run the notebooks in order: `01` produces the suitability GeoTIFF that `02` consumes.
+The notebooks expect the raw geodata under `./Data/...` and write intermediate rasters to `./outputs/...` (paths are relative to the repo root). The datasets are large and licensed by their providers, so they are not redistributed here; see [`DATA.md`](DATA.md) for sources and the expected folder layout. Run the notebooks in order: `01` produces the suitability GeoTIFF that `02` consumes. Notebooks 01 and 02 also read a land-mass outline and four per-nation region rasters that are not produced by the notebooks (see `DATA.md`).
 
 ## Data sources
 
@@ -132,10 +134,10 @@ UK Land Cover Map (UKCEH) · Global Wind Atlas (wind speed) · SRTM (terrain slo
 
 ## Limitations
 
-- Regional **grid-congestion** scoring (C7) is a coarse, region-level proxy rather than a node-level capacity model.
-- The 0.5 GW footprint requirement is deliberately strict; smaller modular clusters (100–250 MW) would unlock more balanced siting across England and NI.
+- Regional **grid-congestion** scoring (C7) is a coarse, region-level proxy rather than a node-level capacity model, and in the current implementation it is effectively constant on eligible pixels (see the note above).
+- The 0.5 GW footprint requirement is deliberately strict; smaller clusters (100–250 MW) would allow more sites in England and NI.
 - Capacity factors and cost assumptions are point estimates from published industry data (see the sensitivity analysis for the response surface).
 
 ## Notes
 
-Spatial analysis of energy data. A full written report accompanies this code repository.
+The written report that accompanies this code is not included in the repository.
